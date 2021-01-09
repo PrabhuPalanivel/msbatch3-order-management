@@ -1,0 +1,46 @@
+spring:
+ profiles:
+  default: "dev"
+
+---
+spring:
+ profiles: dev
+ jpa:
+  show-sql: true
+  hibernate:
+   ddl-auto : none
+   naming: # must tell spring/jpa/hibernate to use the column names as specified, not snake case
+    physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+ datasource:
+  password: root
+  url: jdbc:mysql://localhost:3306/superleague
+  username: root
+   
+        
+jwt:
+ secret: test
+ get:
+  token:
+   uri: /authenticate
+   
+server:
+ port: 8888
+ servlet:
+  context-path: /Dev
+---   
+spring:
+ profiles: prod
+ jpa:
+  hibernate:
+   ddl-auto : none 
+ datasource:
+  password: root
+  url: jdbc:mysql://localhost:3306/superleague
+  username: root
+        
+jwt:
+ secret: test
+ get:
+  token:
+   uri: /authenticate
