@@ -44,3 +44,14 @@ jwt:
  get:
   token:
    uri: /authenticate
+---
+logging:
+  level:
+    root: INFO
+    com.sl.ms.ordermanagement: TRACE
+  pattern:
+    console: "[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-5level [%t] [%logger - %line]: %m%n"
+    file: "[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-5level [%t] [%logger - %line]: %m%n"
+  file:
+    name: C:/Users/prabh/eclipse-workspace/SuperLeague/Java8/application-debug.log
+   

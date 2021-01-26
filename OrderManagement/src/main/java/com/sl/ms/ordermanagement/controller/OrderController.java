@@ -3,22 +3,29 @@ package com.sl.ms.ordermanagement.controller;
 import java.util.*;
 import java.util.function.Consumer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
+
 import com.sl.ms.ordermanagement.model.Inventory;
 import com.sl.ms.ordermanagement.model.Order;
 import com.sl.ms.ordermanagement.model.OrderItems;
+import com.sl.ms.ordermanagement.model.Product;
 import com.sl.ms.ordermanagement.service.InventoryService;
 import com.sl.ms.ordermanagement.service.OrderItemService;
 import com.sl.ms.ordermanagement.service.OrderService;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.client.RestTemplate;
 
 @RestController
 @CrossOrigin()
 public class OrderController {
 
+	
+	
 	@Autowired
 	private OrderService service;
 
@@ -28,9 +35,22 @@ public class OrderController {
 	@Autowired
 	private InventoryService inventoryservice;
 
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	//Call the Inventory management to know the inventory details 
+	@GetMapping("/getproductshere")
+	public Product getproductshere() {
+		logger.info("executing getproductshere");
+		RestTemplate restTemplate= new RestTemplate();
+		Product Productreturned = restTemplate.getForObject("http://localhost:8888/Dev/products/17", Product.class);
+		return Productreturned;
+		
+	}
+	
 	// RESTful API methods for Retrieval operations
 	@GetMapping("/orders")
 	public List<Order> list() {
+		logger.info("executing getmapping /orders");
 		return service.listAll();
 	}
 
@@ -46,7 +66,7 @@ public class OrderController {
 
 	@GetMapping("/orders/{id}")
 	public Optional<Order> get(@PathVariable Integer id) {
-
+		logger.info("executing getmapping /orders/{id}");
 		return service.listAllOrderItems(id);
 
 	}
@@ -65,6 +85,8 @@ public class OrderController {
 
 	@PostMapping("/orders")
 	public void add(@RequestBody Order order) throws CustomException {
+		
+		logger.info("executing postmapping /orders");
 		List<OrderItems> Inputorderitems = order.getOrderitems();
 		boolean processOrderFlag = true;
 		for (int i = 0; i < Inputorderitems.size(); i++) {
@@ -82,6 +104,7 @@ public class OrderController {
 			else {
 				processOrderFlag = false;
 				System.out.println("Enough Quantity not available for" + Inputorderitemname);
+				logger.info("Enough Quantity not available for" + Inputorderitemname);
 				throw new CustomException();
 
 				// break;
@@ -97,6 +120,7 @@ public class OrderController {
 	@PutMapping("/orders/{id}")
 	public ResponseEntity<?> update(@RequestBody Order order, @PathVariable Integer id) {
 		try {
+			logger.info("executing putmapping /orders/{id}");
 			Order existOrder = service.get(id);
 			service.save(order);
 			return new ResponseEntity<>(HttpStatus.OK);
@@ -108,6 +132,7 @@ public class OrderController {
 	// RESTful API method for Delete operation
 	@DeleteMapping("/orders/{id}")
 	public void delete(@PathVariable Integer id) {
+		logger.info("executing deletemapping /orders/{id}");
 		service.delete(id);
 	}
 

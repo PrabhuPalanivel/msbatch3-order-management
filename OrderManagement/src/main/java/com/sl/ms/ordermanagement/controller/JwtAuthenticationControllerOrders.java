@@ -2,6 +2,8 @@ package com.sl.ms.ordermanagement.controller;
 
 import java.util.Objects;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,9 +36,11 @@ public class JwtAuthenticationControllerOrders {
 	@Autowired
 	private UserDetailsService jwtInMemoryUserDetailsService;
 
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 	@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
-
+		logger.info("executing authentication");
 		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
 		final UserDetails userDetails = jwtInMemoryUserDetailsService
